@@ -1,19 +1,21 @@
 const request = require('request');
-const writeIt = require('fs');
+const fs = require('fs');
 let url = process.argv.slice(2);
-
-console.log(url);
-
+//function that writes a given website to a given file location
 request(url[0], (error, response, body) => {
-  if(error) {
+  if (error) {
     console.log(`Error:`, error);
     return error;
   }
-  console.log('error:', error); // Print the error if one occurred
-  console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-  console.log('body:', body); // Print the HTML for the Google homepage.
+  //if a local url exists, writes body of website to new file
+  if (url[1]) {
+    fs.writeFile(url[1], body, 'utf8', (error) => {
+      //if cannot write, displays error message
+      if (error) return console.log(error);
+    });
+    let fileSize = body.length;
+    console.log(`Downloaded and saved ${fileSize} bytes to ${url[1]}`);
+  }
 });
-
-console.log(`Downloaded and saved 1235 bytes to ./index.html`);
 
 
